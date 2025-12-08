@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_profile_gradient">
+
+    <!-- Top title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create your BluDrop"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#222222"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="28dp"/>
+
+    <!-- Big avatar card -->
+    <LinearLayout
+        android:id="@+id/layoutMainAvatarCard"
+        android:layout_width="0dp"
+        android:layout_height="230dp"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="@drawable/bg_avatar_main_card"
+        android:elevation="6dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:id="@+id/imgAvatarPreview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar1"
+            android:background="#00000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your avatar"
+            android:textSize="12sp"
+            android:textColor="#777777"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- Label above avatar options -->
+    <TextView
+        android:id="@+id/tvAvatarLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick a style"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        app:layout_constraintTop_toBottomOf="@id/layoutMainAvatarCard"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"/>
+
+    <!-- Horizontal scroll of small avatar cards (NFT style) -->
+    <HorizontalScrollView
+        android:id="@+id/scrollAvatars"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/tvAvatarLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <ImageView
+                android:id="@+id/avatarOption1"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                android:src="@drawable/avatar1"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_avatar_small_card"
+                android:layout_marginEnd="12dp"
+                android:rotation="-8"/>
+
+            <ImageView
+                android:id="@+id/avatarOption2"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                android:src="@drawable/avatar2"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_avatar_small_card"
+                android:layout_marginEnd="12dp"
+                android:rotation="5"/>
+
+            <ImageView
+                android:id="@+id/avatarOption3"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                android:src="@drawable/avatar3"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_avatar_small_card"
+                android:layout_marginEnd="12dp"
+                android:rotation="-4"/>
+
+            <ImageView
+                android:id="@+id/avatarOption4"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                android:src="@drawable/avatar4"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_avatar_small_card"
+                android:layout_marginEnd="12dp"
+                android:rotation="7"/>
+
+            <ImageView
+                android:id="@+id/avatarOption5"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                android:src="@drawable/avatar5"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_avatar_small_card"
+                android:layout_marginEnd="12dp"
+                android:rotation="-6"/>
+
+            <ImageView
+                android:id="@+id/avatarOption6"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                android:src="@drawable/avatar6"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_avatar_small_card"
+                android:rotation="4"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Name input inside soft card -->
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Display name"
+        android:background="@drawable/bg_input_rounded"
+        android:padding="12dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/scrollAvatars"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"/>
+
+    <!-- Continue button -->
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:textStyle="bold"
+        android:textColor="#222222"
+        android:backgroundTint="#FFCC00"
+        app:layout_constraintTop_toBottomOf="@id/etName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
