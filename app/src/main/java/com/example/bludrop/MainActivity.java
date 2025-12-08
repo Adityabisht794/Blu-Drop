@@ -12,11 +12,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -34,20 +37,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // UI components
     private TextView tvStatus, tvChatLog;
     private Button btnEnableBluetooth, btnScanConnect, btnSend;
     private EditText etMessage;
 
-    // Bluetooth
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothChatService chatService;
 
-    // Handler message types
     public static final int MESSAGE_READ = 1;
     public static final int MESSAGE_STATUS = 2;
 
-    // Permissions
     private static final int REQ_BT_PERMISSIONS = 101;
     private static final String[] BT_PERMISSIONS = new String[]{
             Manifest.permission.BLUETOOTH_CONNECT,
@@ -55,10 +54,8 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.ACCESS_FINE_LOCATION
     };
 
-    // Enable BT dialog
     private static final int REQ_ENABLE_BT = 201;
 
-    // Nearby devices scan data
     private final List<BluetoothDevice> nearbyDevices = new ArrayList<>();
     private final List<String> nearbyDeviceNames = new ArrayList<>();
     private boolean isReceiverRegistered = false;
@@ -69,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // UI binding
         tvStatus = findViewById(R.id.tvStatus);
         tvChatLog = findViewById(R.id.tvChatLog);
         btnEnableBluetooth = findViewById(R.id.btnEnableBluetooth);
@@ -77,10 +73,8 @@ public class MainActivity extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSend);
         etMessage = findViewById(R.id.etMessage);
 
-        // chat log clean start
         tvChatLog.setText("");
 
-        // Bluetooth adapter
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
@@ -89,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Handler: Bluetooth thread → UI update
         Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -108,17 +101,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // Chat service
         chatService = new BluetoothChatService(bluetoothAdapter, handler);
 
-        // Pehle permissions check karo
         requestBluetoothPermissionsIfNeeded();
 
         updateBluetoothStatus();
 
-        btnEnableBluetooth.setOnClickListener(v -> enableBluetooth());
+        btnEnableBluetooth.setOnClickListener(v -> toggleBluetooth());
 
-        // "Nearby scan" button
         btnScanConnect.setOnClickListener(v -> {
             if (!bluetoothAdapter.isEnabled()) {
                 Toast.makeText(this, "Turn ON Bluetooth first", Toast.LENGTH_SHORT).show();
@@ -143,17 +133,45 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // discovery receiver unregister karo
         if (isReceiverRegistered) {
             unregisterReceiver(discoveryReceiver);
             isReceiverRegistered = false;
         }
     }
 
-    // ---------- PERMISSIONS HELPERS ----------
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    private void toggleBluetooth() {
+
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!bluetoothAdapter.isEnabled()) {
+
+            if (!hasBtPermissions()) {
+                requestBluetoothPermissionsIfNeeded();
+                return;
+            }
+
+            Intent enableIntent =
+                    new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQ_ENABLE_BT);
+            return;
+        }
+
+        Toast.makeText(
+                this,
+                "Turn OFF Bluetooth from system settings",
+                Toast.LENGTH_SHORT
+        ).show();
+
+        Intent intent =
+                new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+        startActivity(intent);
+    }
 
     private boolean hasBtPermissions() {
-        // Android 12+ : BT + location runtime permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             for (String perm : BT_PERMISSIONS) {
                 if (ActivityCompat.checkSelfPermission(this, perm)
@@ -163,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         } else {
-            // Android 6–11 : scan ke liye location permission
             return ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED;
@@ -216,22 +233,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ---------- UI + BLUETOOTH LOGIC ----------
 
     private void updateBluetoothStatus() {
         if (bluetoothAdapter.isEnabled()) {
             tvStatus.setText("Status: Bluetooth ON (Waiting / Connected)");
+
+            // Button UI when ON
+            btnEnableBluetooth.setText("Disable Bluetooth");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                btnEnableBluetooth.setBackgroundTintList(
+                        android.content.res.ColorStateList.valueOf(
+                                android.graphics.Color.parseColor("#B00020")   // red
+                        )
+                );
+            }
+
             if (hasBtPermissions()) {
-                // Apne app users ke liye Bluetooth name set karo
                 updateBluetoothNameForAppUser();
                 startServerIfPossible();
             }
         } else {
             tvStatus.setText("Status: Bluetooth OFF");
+
+            btnEnableBluetooth.setText("Enable Bluetooth");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                btnEnableBluetooth.setBackgroundTintList(
+                        ColorStateList.valueOf(Color.parseColor("#FF6F61")));
+
+
+            }
         }
     }
 
-    // Apne app ke users ka naam: BLUDROP_<UserName>
+
     private void updateBluetoothNameForAppUser() {
         String userName = getSharedPreferences("BluDrop", MODE_PRIVATE)
                 .getString("user_name", "User");
@@ -249,11 +283,9 @@ public class MainActivity extends AppCompatActivity {
                 bluetoothAdapter.setName(targetName);
             }
         } catch (SecurityException e) {
-            // ignore / log
         }
     }
 
-    // ⭐ Official way: system dialog for enabling BT
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     private void enableBluetooth() {
         if (bluetoothAdapter == null) {
@@ -279,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -293,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ---------- NEARBY DISCOVERY LOGIC ----------
 
     private void startDiscoveryForNearbyDevices() {
         if (!hasBtPermissions()) {
@@ -327,7 +359,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ye receiver har nearby device ko capture karega
     private final BroadcastReceiver discoveryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(android.content.Context context, Intent intent) {
@@ -349,7 +380,6 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Only show devices running this app: BLUDROP_<Name>
                     if (!name.startsWith("BLUDROP_")) {
                         return;
                     }
@@ -375,9 +405,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
-    // ---------- SNAPCHAT STYLE BOTTOM SHEET ----------
-
     private void showNearbyDevicesBottomSheet() {
         if (nearbyDevices.isEmpty()) {
             Toast.makeText(this, "No nearby BluDrop users found", Toast.LENGTH_SHORT).show();
@@ -391,12 +418,10 @@ public class MainActivity extends AppCompatActivity {
         ImageView imgSelfAvatar = view.findViewById(R.id.imgSelfAvatar);
         ListView listView = view.findViewById(R.id.listNearbyDevices);
 
-        // apna naam
         String userName = getSharedPreferences("BluDrop", MODE_PRIVATE)
                 .getString("user_name", "You");
         tvSelfName.setText(userName);
 
-        // 🎯 avatar image resource (NameActivity me save kiya tha)
         int avatarRes = getSharedPreferences("BluDrop", MODE_PRIVATE)
                 .getInt("user_avatar_res", R.drawable.avatar1); // default avatar1
 
@@ -417,8 +442,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
-    // ---------- MESSAGE SEND ----------
 
     private void sendMessage() {
         String msg = etMessage.getText().toString().trim();
