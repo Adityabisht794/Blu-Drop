@@ -1,8 +1,8 @@
-# 📡 Blue-Drop: Decentralized, Internet-Free Messaging
+# 📡 Blu-Drop: Decentralized, Internet-Free Messaging
 
 ## 🚀 Project Overview
 
-**Blue-Drop** is a decentralized, peer-to-peer (P2P) messaging application developed as a B.Tech Final Year Project. It is designed to provide reliable communication in environments where traditional internet or cellular connectivity is unavailable or compromised.
+**Blu-Drop** is a decentralized, peer-to-peer (P2P) messaging application developed as a B.Tech Final Year Project. It is designed to provide reliable communication in environments where traditional internet or cellular connectivity is unavailable or compromised.
 
 Inspired by projects like BitChat, MeshConnect leverages **Bluetooth Low Energy (BLE) 5.0** to form a **self-healing mesh network**, allowing messages to hop securely from one device to the next until they reach their destination.
 
@@ -36,7 +36,7 @@ The core innovation of Blue-Drop lies in the **Custom Mesh Protocol** built on t
 | Component | Technology | Role |
 | :--- | :--- | :--- |
 | **Platform** | **Android** | Primary application platform. |
-| **Language** | **Kotlin** | Preferred language for clean, modern Android development. |
+| **Language** | **Java** |  
 | **Networking** | **Bluetooth Low Energy (BLE) 5.0+** | Low-power hardware layer for P2P communication (Advertising & Scanning). |
 | **Protocol** | **Custom Layer 7 Protocol** | Defines message format, TTL, addressing, and relay logic. |
 | **Security** | **Bouncy Castle / JCA** | Implementation of AES-GCM for E2EE and key management. |
