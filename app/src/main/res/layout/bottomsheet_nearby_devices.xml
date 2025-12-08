@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Top handle line -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/darker_gray"
+        android:alpha="0.4"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="4dp"
+        android:radius="50dp" />
+
+    <!-- Header row like Snapchat profile -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <!-- Circle avatar with first letter -->
+        <ImageView
+            android:id="@+id/imgSelfAvatar"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar1"
+            android:background="@android:drawable/btn_default"
+            android:layout_marginEnd="12dp" />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/tvSelfName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Name"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Visible to nearby BluDrop users"
+                android:textSize="12sp"
+                android:textColor="#777777" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Fake map card (for now just a placeholder box like snap map) -->
+    <FrameLayout
+        android:id="@+id/mapPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:background="#f0f0f0"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nearby area map (future)"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <!-- Title for nearby devices -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nearby BluDrop devices"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- List of nearby devices -->
+    <ListView
+        android:id="@+id/listNearbyDevices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp" />
+
+</LinearLayout>
