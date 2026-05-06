@@ -1,94 +1,124 @@
-# 📡 Blu-Drop: Decentralized, Internet-Free Messaging
-
-## 🚀 Project Overview
-
-**Blu-Drop** is a decentralized, peer-to-peer (P2P) messaging application developed as a B.Tech Final Year Project. It is designed to provide reliable communication in environments where traditional internet or cellular connectivity is unavailable or compromised.
-
-Inspired by projects like BitChat, MeshConnect leverages **Bluetooth Low Energy (BLE) 5.0** to form a **self-healing mesh network**, allowing messages to hop securely from one device to the next until they reach their destination.
-
-### The Problem
-
-Modern communication is entirely dependent on centralized internet infrastructure. In disaster zones, remote areas, or situations of network failure, communication often halts completely.
-
-### The Solution
-
-MeshConnect creates an **ad-hoc, localized network** where every device acts as a relay, dramatically extending the communication range far beyond the standard Bluetooth limit.
+# Blu-Drop 📡
+### Decentralized Peer-to-Peer Offline Messaging System using Google Nearby Connections API
 
 ---
 
-## ✨ Core Features
+# 🚀 Overview
 
-* **Peer-to-Peer Communication:** Direct, server-less messaging between users within the mesh network.
-* **Managed Flooding Protocol:** Custom application-layer protocol ensuring messages efficiently propagate across multiple hops (devices) without relying on a central router.
-* **End-to-End Encryption (E2EE):** All messages are secured using industry-standard **AES-GCM** cryptography, ensuring privacy even when messages are relayed by untrusted nodes.
-* **Store-and-Forward:** Messages destined for offline users are temporarily cached by relay nodes and delivered automatically upon the recipient's reconnection.
-* **Decentralized Addressing:** Unique device identifiers and addressing scheme for robust routing.
-* **Intuitive Android UI:** Clean interface for chat, connection status, and mesh diagnostics.
+**Blu-Drop** is a decentralized peer-to-peer (P2P) offline messaging application developed as a **B.Tech Final Year Project**. The system enables communication between Android devices without requiring internet connectivity, mobile data, centralized servers, or cellular infrastructure.
 
----
+The application leverages the **Google Nearby Connections API** with the **P2P_CLUSTER** networking strategy to establish localized communication using Bluetooth and Wi-Fi Direct technologies. Devices dynamically discover nearby peers, establish direct connections, and relay messages across multiple nodes using a managed flooding mechanism.
 
-## 💻 Technical Architecture & Stack
-
-The core innovation of Blue-Drop lies in the **Custom Mesh Protocol** built on top of the low-level Android BLE API.
-
-### Tech Stack
-
-| Component | Technology | Role |
-| :--- | :--- | :--- |
-| **Platform** | **Android** | Primary application platform. |
-| **Language** | **Java** |  
-| **Networking** | **Bluetooth Low Energy (BLE) 5.0+** | Low-power hardware layer for P2P communication (Advertising & Scanning). |
-| **Protocol** | **Custom Layer 7 Protocol** | Defines message format, TTL, addressing, and relay logic. |
-| **Security** | **Bouncy Castle / JCA** | Implementation of AES-GCM for E2EE and key management. |
-| **Data Persistence** | **Room Persistence Library (SQLite)** | Local storage for chat history and cached messages (Store-and-Forward). |
-
-### 🧠 How the Mesh Works
-
-1.  **Message Initiation:** A message is encrypted and encapsulated with a unique ID, a TTL (Time-to-Live) counter, and the recipient's address.
-2.  **Broadcasting:** The sending device broadcasts the message payload as a BLE Advertisement Packet.
-3.  **Relay:** Nearby devices (Mesh Nodes) receive the advertisement.
-    * If the message is for them, they decrypt and display it.
-    * If the message is for another node and the TTL is greater than zero, the receiving node decrements the TTL and re-broadcasts the message, extending its reach.
-4.  **Reliability:** The TTL mechanism prevents infinite looping, and message IDs prevent redundant re-broadcasting, ensuring efficient **managed flooding**.
+Blu-Drop is designed for emergency communication, disaster recovery, remote areas, and offline environments where conventional communication systems may fail or become unavailable.
 
 ---
 
-## ⚙️ Setup and Installation
+# 🎯 Problem Statement
 
-### Prerequisites
+Modern messaging applications heavily depend on:
 
-* Android Studio (Latest Version)
-* Physical Android devices (at least two) running Android 6.0+ with BLE 5.0 support for optimal performance.
+- Internet connectivity
+- Cellular networks
+- Centralized cloud infrastructure
+- Stable network availability
 
-### Steps to Run
+In situations such as:
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/Adityabisht794/Blue-Drop]
-    ```
-2.  **Open in Android Studio:**
-    * Open the project folder in Android Studio.
-3.  **Build and Deploy:**
-    * Connect multiple Android devices via USB.
-    * Select `Run` -> `Run 'app'` and choose your devices to deploy the APK simultaneously.
-4.  **Enable Permissions:**
-    * Ensure Bluetooth and Location services are enabled on all test devices (required for BLE scanning).
+- Natural disasters
+- Remote regions
+- Network outages
+- Emergency response operations
+- Internet shutdowns
 
----
+traditional communication systems often fail completely.
 
-## 👥 Team & Roles
-
-This project was developed by a team of four B.Tech Final Year students.
-
-| Name | Role | Focus Areas |
-| :--- | :--- | :--- |
-| [Gaurav Mehra & Lucky Tiwari] | **Network Architect / BLE Lead** | Custom Protocol, BLE Advertising/Scanning Logic, Node Provisioning. |
-| [Aditya Bisht] | **Security & Protocol Specialist** | End-to-End Encryption (AES-GCM), Key Exchange, Message Reliability/ACKs. |
-| [Lucky Tiwari & Gaurav Mehra] | **Application & UI Developer** | Android UI/UX, Activity/Fragment Management, Front-end Integration. |
-| [Dev Joshi] | **Data & Persistence Engineer** | Room Database Schema, Store-and-Forward Logic, Data Flow (Flow/LiveData). |
+Blu-Drop addresses this challenge by creating a decentralized communication network capable of functioning independently of internet infrastructure.
 
 ---
 
-## 📄 License
+# 💡 Proposed Solution
 
-This project is open-sourced under the [Choose a License, e.g., MIT] License. See the `LICENSE` file for more details.
+Blu-Drop implements a peer-to-peer communication system where Android devices form a localized decentralized network using Bluetooth and Wi-Fi Direct technologies.
+
+The system supports:
+
+- Direct device-to-device communication
+- Multi-hop message propagation
+- Dynamic peer discovery
+- Relay-based message forwarding
+- Offline communication without servers
+
+Messages propagate across connected devices using a managed flooding mechanism with duplicate suppression and hop tracking.
+
+---
+
+# ✨ Core Features
+
+## 🔗 Multi-Hop Communication
+Messages are relayed through multiple devices, extending communication beyond direct wireless range.
+
+## 📡 Managed Flooding Protocol
+Blu-Drop uses controlled rebroadcasting combined with duplicate suppression to minimize redundant transmissions.
+
+## 🧠 Adaptive Peer-to-Peer Topology
+The network dynamically adapts when devices join or leave the communication cluster.
+
+## 🆔 UUID-Based Duplicate Detection
+Each message contains a unique identifier to prevent duplicate processing and rebroadcast loops.
+
+## 📶 P2P Cluster Networking
+Uses Google Nearby Connections API with the `P2P_CLUSTER` strategy for scalable multi-device communication.
+
+## 📊 Hop Count & Relay Path Tracking
+Tracks propagation paths and hop counts for network diagnostics and visualization.
+
+## 🔐 Secure Transport Communication
+Communication channels are protected using the encrypted transport mechanisms provided by the Google Nearby Connections API.
+
+## 📱 Modern Android Architecture
+Built using MVVM and Clean Architecture principles for modularity, scalability, and maintainability.
+
+---
+
+# 🧠 System Architecture
+
+## Communication Workflow
+
+1. Device starts advertising and discovery
+2. Nearby peers are detected automatically
+3. Connections are established dynamically
+4. Messages are serialized into payload objects
+5. Payloads are broadcast to connected peers
+6. Receiving nodes:
+   - Check duplicate cache
+   - Increment hop count
+   - Update relay path
+   - Rebroadcast unseen messages
+
+---
+
+# 🏗️ Technical Stack
+
+| Component | Technology | Purpose |
+|---|---|---|
+| Platform | Android | Mobile application platform |
+| Language | Kotlin / Java | Application development |
+| Connectivity API | Google Nearby Connections API | Peer-to-peer communication |
+| Networking Strategy | P2P_CLUSTER | Multi-device networking |
+| Communication Medium | Bluetooth & Wi-Fi Direct | Device discovery and transfer |
+| Architecture | MVVM + Clean Architecture | Modular system structure |
+| UI Framework | Jetpack Compose | Reactive UI development |
+| State Management | MutableStateFlow | Real-time UI updates |
+| Build Tool | Gradle | Build automation |
+| IDE | Android Studio | Development environment |
+
+---
+
+# 📡 Managed Flooding Mechanism
+
+Blu-Drop uses a relay-based message dissemination model.
+
+## Message Flow
+
+```text
+Device A → Nearby Devices → Relay Nodes → Destination Devices
